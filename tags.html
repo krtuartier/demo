@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html id="ht" lang="zh">
+	<head>
+		<!--qq浏览器下是否可以全屏-->
+		<!--<meta name="x5-fullscreen" content="true" />-->
+		<!--UC浏览器下是否可以全屏-->
+		<!--<meta name="full-screen" content="yes">-->
+		<meta charset="utf-8">
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1, user-scalable=no,width=device-width,height=device-height" />
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mobile_reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/tags.css"/>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/utils.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+//------------------------------------------------------------------------------------------------------------------
+			/**
+			 * 
+			 * @Tags mobile SPA
+			 */
+			(function($) {
+				$.fn.Tags = function(options) {
+					var opts = $.extend({}, $.fn.Tags.defaults, options);
+					return this.each(function() {
+						var $tags = $(this);//导航选项卡
+						var controlObj = $tags.find('li');//导航选项卡的选项li
+						var sectionWrap=opts.sectionWrap?opts.sectionWrap:$tags.next();//默认下一个元素为翻页的wrap
+						var section=sectionWrap.children();//一个section页面
+						var vPer=100/controlObj.length;//选项个数百分比
+						
+						//nav样式
+						function navCss(){
+							$tags.css({
+								'width': '100%',
+								'position': 'relative'
+							});
+							$tags.find('ul').css({
+								'width': '100%'
+							});
+							controlObj.css({
+								'width': vPer+'%'
+							});
+							
+						}
+						//navBar
+						var oNavB = $('<b class="active_border"></b>');
+						oNavB.css({
+							'width': vPer+'%',
+							'left': '0',
+							'display': 'block',
+							'position': 'absolute',
+							'height': '0.05rem',
+							'background-color': opts.barColor,
+							'bottom': '0'
+						});
+						$tags.append(oNavB);
+						
+						//section样式
+						function sectionCss(){
+							sectionWrap.css({
+							    'width': controlObj.length*100+'%',
+							    'height': sectionWrap.parent().height()-$tags.height(),
+							    'position': 'absolute',
+							    'top': $tags.height(),
+							    'left': 0,
+							});
+							section.css({
+								'width': vPer+'%',
+       							'height': '100%'
+							});
+						}
+						
+						setTimeout(function(){
+							navCss();
+							sectionCss();
+						},0);
+						
+						
+						var iW = $(window).width(); //屏幕的宽度
+						var iNow = 0; //第几张
+						var iStartx = 0; //初始位置
+						var iScroll = 0; //滚动距离
+						var iStartScroll = 0; //初始滚动距离
+						//点击nav控制
+						controlObj.each(function(){
+							$(this).click(function(){
+								var oLiIndex=$(this).index();
+								controlObj.removeClass('active');
+								$(this).addClass('active');
+								sectionWrap.animate({
+									'left': 0-oLiIndex*100+'%'
+								}, opts.speed);
+								iNow=oLiIndex;
+								iScroll=-oLiIndex*iW;
+								iStartScroll=-oLiIndex*iW;
+								oNavB.animate({
+									'left': oLiIndex*vPer+'%'
+								}, opts.speed);
+								pageIndex(iNow);
+							});
+						});
+						//触摸移动页面控制
+						sectionWrap.bind('touchstart', function(e) {
+							var touch = e.originalEvent.targetTouches[0];
+							iStartx = touch.pageX;
+							iStartScroll = iScroll;
+						});
+						sectionWrap.bind('touchmove', function(e) {
+							e.preventDefault();//微信touch事件兼容
+							var touch = e.originalEvent.targetTouches[0];
+							var dix = touch.pageX - iStartx;
+							if ((sectionWrap.attr('page')==0&&dix>0)||(sectionWrap.attr('page')==section.length-1&&dix<0)) {
+								return;
+							} else{
+								e.stopPropagation();
+							}
+							iScroll = iStartScroll + dix;
+							iNow = -iScroll / iW;
+							sectionWrap.css({
+								'left': 0-iNow*100+'%'
+							});
+							oNavB.css({
+								'left': iNow*vPer+'%'
+							});
+						});
+						sectionWrap.bind('touchend', function(e) {
+							var touch = e.originalEvent.changedTouches[0];
+							var dix = touch.pageX - iStartx;
+							if ((sectionWrap.attr('page')==0&&dix>0)||(sectionWrap.attr('page')==section.length-1&&dix<0)) {
+								return;
+							} else{
+								e.stopPropagation();
+							}
+							iScroll = iStartScroll + dix;
+							iNow = -iScroll / iW;
+							if(dix<=0&&dix/iW<=-.3){
+								iNow =Math.ceil(iNow);
+							}else if (dix>=0&&dix/iW>=.3) {
+								iNow =Math.floor(iNow);
+							}else{
+								iNow =Math.ceil(iNow);
+							}
+							if(iNow < 0) {
+								iNow = 0
+							} else if(iNow > section.length - 1) {
+								iNow = section.length - 1;
+							}
+							iScroll = -iNow * iW;
+							sectionWrap.animate({
+								'left': 0-iNow*100+'%'
+							}, opts.speed);
+							oNavB.animate({
+								'left': iNow*vPer+'%'
+							}, opts.speed);
+							controlObj.removeClass('active');
+							controlObj.eq(iNow).addClass('active');
+							pageIndex(iNow);
+							
+						});
+						function pageIndex(iNow){
+							sectionWrap.attr('page',iNow);
+						}
+						pageIndex(iNow);
+					});
+				};
+				$.fn.Tags.defaults = {
+					sectionWrap:null,
+					barColor:'#004FB6',
+					speed:200
+				};
+				$.fn.Tags.setDefaults = function(settings) {
+					$.extend($.fn.Tags.defaults, settings);
+				};
+			})(jQuery);
+//-------------------------------------------------------------------------------------------------------------------
+			$(function(){
+				$('.nav').Tags({
+					sectionWrap:$('.section_wrap')
+				});
+				$('.section2_nav').Tags({
+					sectionWrap:$('.section2_wrap')
+				});
+				$('.section2_section4_nav').Tags({
+					sectionWrap:$('.section2_section4_wrap')
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<nav class="nav">
+			<ul class="list-unstyled">
+				<li class="active">第一页</li>
+				<li>第二页</li>
+				<li>第三页</li>
+				<li>第四页</li>
+			</ul>
+		</nav>
+		<section class="section_wrap">
+			<section class="section">
+				<h1 class="page-header">标题1</h1>
+				<p>内容1</p>
+				<p>内容1</p>
+				<p>内容1</p>
+				<p>内容1</p>
+				<p>内容1</p>
+			</section>
+			<section class="section">
+				<nav class="section2_nav">
+					<ul class="list-unstyled">
+						<li class="active">第二页A</li>
+						<li>第二页B</li>
+						<li>第二页C</li>
+						<li>第二页D</li>
+					</ul>
+				</nav>
+				<section class="section2_wrap">
+					<section class="section2_section">内容A</section>
+					<section class="section2_section">内容B</section>
+					<section class="section2_section">内容C</section>
+					<section class="section2_section">
+						<nav class="section2_section4_nav">
+							<ul class="list-unstyled">
+								<li class="active">D-part-a</li>
+								<li>D-part-b</li>
+								<li>D-part-c</li>
+								<li>D-part-d</li>
+							</ul>
+						</nav>
+						<section class="section2_section4_wrap">
+							<section class="section2_section4_section">D-content-a</section>
+							<section class="section2_section4_section">D-content-b</section>
+							<section class="section2_section4_section">D-content-c</section>
+							<section class="section2_section4_section">D-content-d</section>
+						</section>
+					</section>
+				</section>
+			</section>
+			<section class="section">
+				<h1 class="page-header">标题3</h1>
+				<p>内容3</p>
+				<p>内容3</p>
+				<p>内容3</p>
+				<p>内容3</p>
+				<p>内容3</p>
+			</section>
+			<section class="section">
+				<h1 class="page-header">标题4</h1>
+				<p>内容4</p>
+				<p>内容4</p>
+				<p>内容4</p>
+				<p>内容4</p>
+				<p>内容4</p>
+			</section>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript">
+			window.onload=function(){
+				var fs = ' 0 .project 1 css/ 2 drag.html 3 fonts/ 4 img/ 5 index.html 6 js/ 7 readfile.js 8 tags.html';
+				fs=fs.replace(/\s/g,'');
+				fs=fs.replace(/[0-9]/g,'#');
+				fs=fs.split('#');
+				var htmlList=[];
+				for (var i=0,len=fs.length;i<len;i++) {
+					if (fs[i].indexOf('html')>-1) {
+						htmlList.push(fs[i]);
+					}
+				}
+				console.log(htmlList);
+				var li='';
+				for (var i=0,len=htmlList.length;i<len;i++) {
+					li+='<li><a href="'+htmlList[i]+'">'+htmlList[i]+'</a></li>';
+				}
+				var oUL=document.createElement('ul');
+				oUL.innerHTML=li;
+				document.body.appendChild(oUL);
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

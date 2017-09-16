@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<title>适用于手机端触屏拖动效果</title>
+
+
+<link href="css/Sortable.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="css/ply.css"/>
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+<script src="js/Ply.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="padding:80px 0;">
+
+
+	<div class="container" style="height: 520px">
+		<div data-force="30" class="layer block" style="left: 14.5%; top: 0; width: 37%">
+			<div class="layer title">列表拖放</div>
+			<ul id="foo" class="block__list block__list_words">
+				<li>第一列</li>
+				<li>第二列</li>
+				<li>第三列</li>
+				<li>第四列</li>
+				<li>第五列</li>
+				<li>第六列</li>
+				<li>第七列</li>
+				<li>第八列</li>
+			</ul>
+		</div>
+
+		<div data-force="18" class="layer block" style="left: 58%; top: 143px; width: 40%;">
+			<div class="layer title">标签拖放</div>
+			<ul id="bar" class="block__list block__list_tags">
+				<li>It's been</li>
+				<li>a long time coming</li>
+				<li>,</li>
+				<li>but</li>
+				<li>better late than never.</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container">
+		<div id="multi" style="margin-left: 30px">
+			<div><div data-force="5" class="layer title title_xl">图像拖放</div></div>
+
+			<div class="layer tile" data-force="30">
+				<div class="tile__name">A组</div>
+				<div class="tile__list">
+					<img src="img/1.jpg"/>
+					<img src="img/2.jpg"/>
+					<img src="img/3.jpg"/>
+					<img src="img/4.jpg"/>
+				</div>
+			</div>
+
+			<div class="layer tile" data-force="25">
+				<div class="tile__name">B组</div>
+				<div class="tile__list">
+					<img src="img/5.jpg"/>
+					<img src="img/6.jpg"/>
+					<img src="img/7.jpg"/>
+				</div>
+			</div>
+
+			<div class="layer tile" data-force="20">
+				<div class="tile__name">C组</div>
+				<div class="tile__list">
+					<img src="img/8.jpg"/>
+					<img src="img/9.jpg"/>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="container" style="margin-top: 100px">
+		<div id="filter" style="margin-left: 30px">
+			<div><div data-force="5" class="layer title title_xl">添加和删除列表</div></div>
+
+			<div style="margin-top: -8px; margin-left: 10px" class="block__list block__list_words">
+				<ul id="editable">
+					<li>yesterday<i class="js-remove">✖</i></li>
+					<li>today<i class="js-remove">✖</i></li>
+					<li>tomorrow<i class="js-remove">✖</i></li>
+				</ul>
+
+				<button type="button" id="addUser">Add</button>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container" style="margin-top: 100px;">
+		<div id="advanced" style="margin-left: 30px;">
+			<div><div data-force="5" class="layer title title_xl">多种拖放</div></div>
+
+			<div style="width: 25%; float: left; margin-top: 15px; margin-left: 10px" class="block__list block__list_words">
+				<div class="block__list-title">拖出和放入</div>
+				<ul id="advanced-1">
+					<li>type1</li>
+					<li>type1</li>
+					<li>type1</li>
+				</ul>
+			</div>
+
+			<div style="width: 25%; float: left; margin-top: 15px; margin-left: 10px" class="block__list block__list_words">
+				<div class="block__list-title">不减数拖出</div>
+				<ul id="advanced-2">
+					<li>type2</li>
+					<li>type2</li>
+					<li>type2</li>
+				</ul>
+			</div>
+
+			<div style="width: 25%; float: left; margin-top: 15px; margin-left: 10px" class="block__list block__list_words">
+				<div class="block__list-title">只放入</div>
+				<ul id="advanced-3">
+					<li>type3</li>
+					<li>type3</li>
+					<li>type3</li>
+				</ul>
+			</div>
+
+			<div style="clear: both"></div>
+		</div>
+	</div>
+
+	<div class="container" style="margin-top: 100px;">
+		<div id="handle" style="margin-left: 30px;">
+			<div><div data-force="5" class="layer title title_xl">标签部分拖动</div></div>
+
+			<div style="width: 30%; margin-left: 10px" class="block__list_words">
+				<ul id="handle-1">
+					<li><span class="drag-handle">&#9776;</span>Heinken</li>
+					<li><span class="drag-handle">&#9776;</span>GUINNESS</li>
+					<li><span class="drag-handle">&#9776;</span>JACK DANIELS</li>
+				</ul>
+			</div>
+
+			<div style="clear: both"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/Sortable.js"></script>
+	<script type="text/javascript">
+		$(function (){
+			var console = window.console;
+
+			if( !console.log ){
+				console.log = function (){
+					alert([].join.apply(arguments, ' '));
+				};
+			}
+
+
+			Sortable.create(foo, {
+				group: "words",
+				animation: 150,
+				store: {
+					get: function (sortable) {
+						var order = localStorage.getItem(sortable.options.group);
+						return order ? order.split('|') : [];
+					},
+					set: function (sortable) {
+						var order = sortable.toArray();
+						localStorage.setItem(sortable.options.group, order.join('|'));
+					}
+				},
+				onAdd: function (evt){ console.log('onAdd.foo:', [evt.item, evt.from]); },
+				onUpdate: function (evt){ console.log('onUpdate.foo:', [evt.item, evt.from]); },
+				onRemove: function (evt){ console.log('onRemove.foo:', [evt.item, evt.from]); },
+				onStart:function(evt){ console.log('onStart.foo:', [evt.item, evt.from]);},
+				onSort:function(evt){ console.log('onStart.foo:', [evt.item, evt.from]);},
+				onEnd: function(evt){ console.log('onEnd.foo:', [evt.item, evt.from]);}
+			});
+
+
+			Sortable.create(bar, {
+				group: "words",
+				animation: 150,
+				onAdd: function (evt){ console.log('onAdd.bar:', evt.item); },
+				onUpdate: function (evt){ console.log('onUpdate.bar:', evt.item); },
+				onRemove: function (evt){ console.log('onRemove.bar:', evt.item); },
+				onStart:function(evt){ console.log('onStart.foo:', evt.item);},
+				onEnd: function(evt){ console.log('onEnd.foo:', evt.item);}
+			});
+
+
+			Sortable.create(multi, {
+				animation: 150,
+				draggable: '.tile',
+				handle: '.tile__name'
+			});
+
+
+			var editableList = Sortable.create(editable, {
+				animation: 150,
+				filter: '.js-remove',
+				onFilter: function (evt) {
+					evt.item.parentNode.removeChild(evt.item);
+				}
+			});
+
+
+			addUser.onclick = function () {
+				Ply.dialog('prompt', {
+					title: 'Add',
+					form: { tag: 'tag' }
+				}).done(function (ui) {
+					var el = document.createElement('li');
+					el.innerHTML = ui.data.tag + '<i class="js-remove">✖</i>';
+					editableList.el.appendChild(el);
+				});
+			};
+
+
+			[].forEach.call(multi.getElementsByClassName('tile__list'), function (el){
+				Sortable.create(el, {
+					group: 'photo',
+					animation: 150
+				});
+			});
+
+
+			[{
+				name: 'advanced',
+				pull: true,
+				put: true
+			},
+			{
+				name: 'advanced',
+				pull: 'clone',
+				put: false
+			}, {
+				name: 'advanced',
+				pull: false,
+				put: true
+			}].forEach(function (groupOpts, i) {
+				Sortable.create(document.getElementById('advanced-' + (i + 1)), {
+					sort: (i != 1),
+					group: groupOpts,
+					animation: 150
+				});
+			});
+
+			Sortable.create(document.getElementById('handle-1'), {
+				handle: '.drag-handle',
+				animation: 150
+			});
+
+		});
+
+
+
+	</script>
+
+</body>
+</html>
