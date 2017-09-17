@@ -2,6 +2,9 @@
   height: 100%;
   position: relative;
 }
+.wrap p {
+  padding-top: 0.2rem;
+}
 .wrap .zdrag {
   position: relative;
 }
