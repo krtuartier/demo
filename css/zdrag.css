@@ -4,6 +4,10 @@
 }
 .wrap p {
   padding-top: 0.2rem;
+  overflow: hidden;
+}
+.wrap p .chooseList {
+  float: right;
 }
 .wrap .zdrag {
   position: relative;
@@ -13,8 +17,4 @@
 }
 .wrap .zdrag .change {
   opacity: .5;
-}
-.wrap .chooseList {
-  position: absolute;
-  bottom: 1rem;
 }
