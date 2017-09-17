@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html id="ht" lang="zh">
+	<head>
+		<!--qq浏览器下是否可以全屏-->
+		<!--<meta name="x5-fullscreen" content="true" />-->
+		<!--UC浏览器下是否可以全屏-->
+		<!--<meta name="full-screen" content="yes">-->
+		<meta charset="utf-8">
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1, user-scalable=no,width=device-width,height=device-height" />
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mobile_reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/zdrag.css"/>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/utils.js" type="text/javascript" charset="utf-8"></script>-->
+		<script type="text/javascript">
+//------------------------------------------------------------------------------------------------------------------
+			/**
+			 * 
+			 * @Zdrag mobile SPA
+			 */
+			(function($) {
+		        $.fn.extend({
+		            AutoSize: function() {
+		                var element = $(this);
+		                auto();
+		                function auto() {
+		                    var width = $(window).width(),
+		                        height = $(window).height();
+		                    $("html").css("font-size", width / 7.5);
+		                    $(element).width(width).height(height);
+		                };
+		                $(window).resize(auto);
+		            }
+		        });
+				$.fn.Zdrag = function(options) {
+					var opts = $.extend({}, $.fn.Zdrag.defaults, options);
+					return this.each(function() {
+						var $zdrag = $(this);//拖拽列表
+						var controlObj = $zdrag.find('li');//拖拽列表的项
+						if (opts.listNum) {
+							listNum();
+						}
+						function listNum(){
+							for (var i=0,len=controlObj.length;i<len;i++) {
+								if (controlObj.eq(i).find('i').length>0) {
+									controlObj.eq(i).find('i').html(i+1+'.');
+								} else{
+									var oINum=$('<i>'+(i+1)+'.</i>');
+									oINum.css({
+										'font-style':'normal',
+										'float':'left'
+									});
+									controlObj.eq(i).append(oINum);
+								}
+							}
+						}
+						controlObj.each(function(){
+							var isdrag=false;   
+						    var NowLeft=null,disX=null;
+						    var NowTop=null,disY=null; 
+							var $cloneObj=null;
+							var type=opts.type;
+							var oH=$(this).outerHeight();
+							var oW=$(this).outerWidth();
+							var index=$(this).index();
+							var i=null;
+							var go=null;
+							$(this).css({
+								'position': 'absolute',
+								'width':'100%',
+								'left':0,
+								'top':index*oH
+							})
+							$(this).bind('touchstart',function(e) {
+								var touch = e.originalEvent.targetTouches[0];
+								NowLeft = parseInt($(this).css('left'));
+								NowTop = parseInt($(this).css('top'));
+								disX = touch.pageX;
+								disY = touch.pageY;
+								$cloneObj=$(this).clone();
+								$cloneObj.css({
+									'position': 'absolute',
+									'width':oW,
+									'height':oH,
+									'left':NowLeft,
+									'top':NowTop,
+									'z-index':99
+								});
+								$zdrag.append($cloneObj);
+								$(this).addClass(type);
+							});
+							$(this).bind('touchmove', function(e) {
+								isdrag = true;
+								e.preventDefault();//微信touch事件兼容
+								var touch = e.originalEvent.targetTouches[0];
+								if (isdrag){
+									$cloneObj.css('left',NowLeft + touch.pageX - disX);
+									$cloneObj.css('top',NowTop + touch.pageY - disY);
+									dragMoveFn(type);
+						       }
+							});
+							$(this).bind('touchend', function(e) {
+								$(this).removeClass(type);
+								$cloneObj.remove();
+								var touch = e.originalEvent.changedTouches[0];
+								if (isdrag) {
+									dragEndFn(type);
+								}
+								isdrag = false;
+							});
+							function dragMoveFn(type){
+								var list={
+									'change':function(){
+										i=Math.ceil($cloneObj.position().top/oH);
+										if (i>=0&&i<=controlObj.length-1) {
+											if (i!=index&&($cloneObj.position().top+oH)>=controlObj.eq(i).position().top&&($cloneObj.position().top)<=controlObj.eq(i).position().top) {
+												controlObj.removeClass('active');
+												controlObj.eq(i).addClass('active');
+											}
+										}
+											
+									}
+								};
+								for (var key in list) {
+									if (key==type) {
+										list[key]();
+									}
+								}
+							}
+							function dragEndFn(type){
+								var list={
+									'change':function(){
+										controlObj.removeClass('active');
+										var tmp=controlObj.eq(i).html();
+										controlObj.eq(i).html(controlObj.eq(index).html());
+										controlObj.eq(index).html(tmp);
+										listNum();
+									}
+								};
+								for (var key in list) {
+									if (key==type) {
+										list[key]();
+									}
+								}
+							}
+						});
+					});
+				};
+				$.fn.Zdrag.defaults = {
+					type:'change',
+					listNum:true
+				};
+				$.fn.Zdrag.setDefaults = function(settings) {
+					$.extend($.fn.Zdrag.defaults, settings);
+				};
+				$.fn.ChooseList = function(options) {
+					var opts = $.extend({}, $.fn.ChooseList.defaults, options);
+					return this.each(function() {
+						var $chooseListBtn = $(this);//选择排序
+						var oUl=opts.list;
+						var aLis=oUl.children();
+						var toggleVal=false;
+						var newIndex=1;
+						var tmp=null;
+						var numicon=null;
+								aLis.each(function(){
+									$(this).click(function(){
+										if (toggleVal) {
+											if($(this).find('b').length<1){
+												numicon=$('<b></b>');
+												numicon.css({
+													'float':'right',
+													'color':'cornflowerblue'
+												});
+												$(this).append(numicon);
+												$(this).removeClass('change');
+											}
+											if ($(this).find('b').html()=='') {
+												$(this).find('b').html(newIndex);
+												newIndex+=1;
+											} else if ($(this).find('b').html()==(newIndex-1)) {
+												$(this).addClass('change');
+												$(this).find('b').remove();
+												newIndex-=1;
+											}else{
+												var tmp=$(this).find('b').html();
+												$(this).find('b').html('');
+												for (var i=0,len=aLis.length;i<len;i++) {
+													if (aLis.eq(i).find('b').html()>tmp) {
+														aLis.eq(i).find('b').html(aLis.eq(i).find('b').html()-1);
+													}
+												}
+												newIndex-=1;
+											}
+											
+										}
+									});
+								});
+						$chooseListBtn.click(function(){
+							var newary=null;
+							var oldary=null;
+							if (toggleVal) {
+								$(this).html('排序按钮');
+								newIndex=1;
+								numicon=null;
+								newary=[];
+								oldary=[];
+								for (var i=0,len=aLis.length;i<len;i++) {
+									if (aLis.eq(i).find('b').length<1) {
+										oldary.push(aLis.eq(i).html());
+									}else if (aLis.eq(i).find('b').length>0) {
+										var saveIndex=aLis.eq(i).find('b').html()-1;
+										newary[saveIndex]=aLis.eq(i).html();
+									}
+								}
+								for (var i=0,len=aLis.length;i<len;i++) {
+									if (i<=newary.length-1) {
+										aLis.eq(i).html(newary[i]);
+									} else{
+										aLis.eq(i).html(oldary[i-newary.length]);
+									}
+								}
+								for (var i=0,len=aLis.length;i<len;i++) {
+									if (aLis.eq(i).find('i').length>0) {
+										aLis.eq(i).find('i').html(i+1+'.');
+									} else{
+										var oINum=$('<i>'+(i+1)+'.</i>');
+										oINum.css({
+											'font-style':'normal',
+											'float':'left'
+										});
+										aLis.eq(i).append(oINum);
+									}
+								}
+								for (var i=0,len=aLis.length;i<len;i++) {
+									aLis.eq(i).find('b').remove();
+								}
+								aLis.removeClass('change');
+							}else{
+								$(this).html('请按顺序选择');
+								aLis.addClass('change');
+							}
+							toggleVal=!toggleVal;
+						});
+					});
+				};
+				$.fn.ChooseList.defaults = {
+					list:null
+				};
+				$.fn.ChooseList.setDefaults = function(settings) {
+					$.extend($.fn.ChooseList.defaults, settings);
+				};
+			})(jQuery);
+//-------------------------------------------------------------------------------------------------------------------
+			$(function(){
+				$('body').AutoSize();
+				$('.zdrag').Zdrag();
+				$('.chooseList').ChooseList({
+					list:$('.zdrag')
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container wrap">
+			<h3 class="page-header">列表拖放和选择排序</h3>
+			<ul class="list-group zdrag">
+				<li class="list-group-item">
+					<span>炖牛肉</span>
+				</li>
+				<li class="list-group-item">
+					<span>炸肉饼</span>
+				</li>
+				<li class="list-group-item">
+					<span>炸虾</span>
+				</li>
+				<li class="list-group-item">
+					<span>蛋包饭</span>
+				</li>
+				<li class="list-group-item">
+					<span>炸猪排盖饭</span>
+				</li>
+				<li class="list-group-item">
+					<span>黄油土豆</span>
+				</li>
+				<li class="list-group-item">
+					<span>咖喱饭</span>
+				</li>
+				<li class="list-group-item">
+					<span>咖喱鸡</span>
+				</li>
+				<li class="list-group-item">
+					<span>油炸海鲜</span>
+				</li>
+			</ul>
+			<button class="btn btn-primary chooseList" type="button">
+				排序按钮
+			</button>
+		</div>
+	</body>
+</html>

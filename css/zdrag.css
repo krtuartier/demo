@@ -1,0 +1,17 @@
+.wrap {
+  height: 100%;
+  position: relative;
+}
+.wrap .zdrag {
+  position: relative;
+}
+.wrap .zdrag li {
+  font-family: "微软雅黑";
+}
+.wrap .zdrag .change {
+  opacity: .5;
+}
+.wrap .chooseList {
+  position: absolute;
+  bottom: 1rem;
+}
