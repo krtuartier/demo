@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--qq浏览器下是否可以全屏-->
+		<!--<meta name="x5-fullscreen" content="true" />-->
+		<!--UC浏览器下是否可以全屏-->
+		<!--<meta name="full-screen" content="yes">-->
+		<meta charset="utf-8">
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1, user-scalable=no,width=device-width,height=device-height" />
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/mobile_reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mobile_lottery_draw.css"/>
+		<script src="js/jquery-1.10.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/utils.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+//------------------------------------------------------------------------------------------------------------------
+			/**
+			 * 
+			 * @LotteryDraw mobile
+			 */
+			(function($) {
+				$.fn.LotteryDraw = function(options) {
+					var opts = $.extend({}, $.fn.LotteryDraw.defaults, options);
+					return this.each(function() {
+						var obj = $(this);
+						obj.css('height',obj.width());
+						var canvas=opts.canvas?opts.canvas.get(0):obj.find('canvas').get(0);
+						var oBtn=opts.startBtn;
+						var viewW=obj.width();
+						var viewH=obj.height();
+						canvas.width=viewW;
+						canvas.height=viewH;
+						var ctx=canvas.getContext('2d');
+						var runHandler=null;
+						var angles=0;
+						var saveAngles=0;
+						var trigger=false;
+						var random=null;
+		//				var clickNum = 3;//可抽奖次数
+		//				var rotNum = 0;//旋转次数
+						var noticeIndex = null;//中奖公告
+						createCircle();
+						centerPI();
+						pointer();
+						dialPI();
+						oBtn.click(function(){
+							if (!trigger) {
+								random=Math.floor(Math.random()*8);
+								noticeIndex = noticeIndex+random;
+								if (noticeIndex>opts.info.length-1) {
+									noticeIndex-=opts.info.length;
+								}
+								runHandler=setInterval(function(){
+									ctx.clearRect(0,0,viewW,viewH);
+									trigger=true;
+									if (angles<-2*180) {
+										angles-=4;
+										createCircle();
+										centerPI();
+										pointer();
+										dialPI();
+										if (angles<(-2*180-2*180/opts.info.length*(random))) {
+											angles=(-2*180-2*180/opts.info.length*(random));
+											createCircle();
+											centerPI();
+											pointer();
+											dialPI();
+											clearInterval(runHandler);
+											console.log(opts.info[noticeIndex].money+' '+opts.info[noticeIndex].currency);
+											trigger=false;
+											saveAngles+=angles;
+											angles=0;
+										}
+									}else{
+										angles-=12;
+										createCircle();
+										centerPI();
+										pointer();
+										dialPI();
+									}
+								},1000/60);
+							}
+						});
+						function pointer(){
+							ctx.beginPath();//箭头指针
+							ctx.moveTo(viewW*.5,viewH*.5-75);
+							ctx.lineTo(viewW*.5-20,viewH*.5);
+							ctx.lineTo(viewW*.5+20,viewH*.5);
+							ctx.lineTo(viewW*.5,viewH*.5-75);
+							ctx.fillStyle =opts.pointerColor;
+							ctx.fill();
+							ctx.closePath();
+						}
+						function centerPI(){
+							ctx.beginPath();//中间圆圈
+							ctx.arc(viewW*.5, viewH*.5, 75, 0, Math.PI * 2, false);
+							ctx.fillStyle = opts.centerPIColor;
+							ctx.fill();
+							ctx.closePath();
+						}
+						function dialPI(){
+							ctx.textBaseline = 'middle';
+							ctx.textAlign="center";
+							ctx.fillStyle = opts.dialFontColor;
+							var step = 2 * Math.PI / 8;
+							for(var i = 0,len=opts.info.length; i < len; i++) {
+								ctx.save();
+								ctx.beginPath();
+								ctx.translate(viewW*.5,viewH*.5);
+								ctx.rotate(i*step+angles/180*Math.PI+saveAngles/180*Math.PI);
+								ctx.font = " 20px Microsoft YaHei";
+								ctx.fillText(opts.info[i].money,0,-120,60);
+								ctx.font = " 14px Microsoft YaHei";
+								ctx.fillText(opts.info[i].currency,0,-100,60);
+								ctx.closePath();
+								ctx.restore();
+							}
+						}
+						function createCircle() {
+							var startAngle = 0; //扇形的开始弧度
+							var endAngle = 0; //扇形的终止弧度
+							for(var i = 0,len=opts.info.length; i < len; i++) {
+								startAngle = Math.PI * (i / 4 - 1 / 8)+angles/180*Math.PI+saveAngles/180*Math.PI;
+								endAngle = startAngle + Math.PI * (1 / 4);
+								ctx.save();
+								ctx.beginPath();
+								ctx.arc(viewW*.5, viewH*.5, 90, startAngle, endAngle, false);
+								ctx.lineWidth = 120;
+								if(i % 2 == 0) {
+									ctx.strokeStyle = opts.evenColor;
+								} else {
+									ctx.strokeStyle = opts.oddColor;
+								}
+								ctx.stroke();
+								ctx.restore();
+							}
+						}
+					});
+				};
+				$.fn.LotteryDraw.defaults = {
+					canvas:null,
+					startBtn:null,
+					evenColor:"#626262",
+					oddColor:"#787878",
+					pointerColor:"#FF4350",
+					centerPIColor:"rgba(0,0,0,.5)",
+					dialFontColor:"#DCC722",
+					info:[
+						{
+							money:"谢谢参与",
+							currency:'再接再厉'
+						},
+						{
+							money:"1000",
+							currency:'元'
+						},
+						{
+							money:"10",
+							currency:'元'
+						},
+						{
+							money:"500",
+							currency:'淘金币'
+						},
+						{
+							money:"100",
+							currency:'元'
+						},
+						{
+							money:"4999",
+							currency:'淘金币'
+						},
+						{
+							money:"1",
+							currency:'元'
+						},
+						{
+							money:"20",
+							currency:'淘金币'
+						}
+					]
+				};
+				$.fn.LotteryDraw.setDefaults = function(settings) {
+					$.extend($.fn.LotteryDraw.defaults, settings);
+				};
+			})(jQuery);
+//-------------------------------------------------------------------------------------------------------------------
+			$(function(){
+				$('body').AutoSize();
+				$('.turnplate_box').LotteryDraw({
+					canvas:$('#myCanvas'),
+					startBtn:$('#tupBtn')
+				});
+			});
+			
+		</script>
+	</head>
+	<body>
+		<div class="turnplate_box">
+			<canvas id="myCanvas">抱歉！浏览器不支持。</canvas>
+			<button id="tupBtn" class="turnplatw_btn">
+				<span>开始抽奖</span>
+			</button>
+		</div>
+	</body>
+</html>

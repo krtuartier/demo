@@ -21,27 +21,30 @@
 		<script src="js/shake.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/utils.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			window.onload = function() { 
-				RootNodeFont();
-			  var myShakeEvent = new Shake({ 
-			    threshold: 15 
-			  }); 
-			  
-			  myShakeEvent.start(); 
-			  
-			  window.addEventListener('shake', shakeEventDidOccur, false); 
-			  
-			  function shakeEventDidOccur () { 
-			    var result = document.getElementById("result"); 
-			    result.className = "result"; 
-			    var arr = ['妹子一枚','福利图片一套','码农笔记一本','土豪金一台']; 
-			    var num = Math.floor(Math.random()*4); 
-			    result.innerHTML = "恭喜，摇得"+arr[num]+"！"; 
-			    setTimeout(function(){ 
-			      result.className = "result result-show"; 
-			    }, 1000); 
-			  } 
-			}; 
+			$(function(){
+				
+			})
+//			window.onload = function() {
+//				RootNodeFont();
+//				var myShakeEvent = new Shake({
+//					threshold: 15
+//				});
+//			
+//				myShakeEvent.start();
+//			
+//				window.addEventListener('shake', shakeEventDidOccur, false);
+//			
+//				function shakeEventDidOccur() {
+//					var result = document.getElementById("result");
+//					result.className = "result";
+//					var arr = ['妹子一枚', '福利图片一套', '码农笔记一本', '土豪金一台'];
+//					var num = Math.floor(Math.random() * 4);
+//					result.innerHTML = "恭喜，摇得" + arr[num] + "！";
+//					setTimeout(function() {
+//						result.className = "result result-show";
+//					}, 1000);
+//				}
+//			};
 		</script>
 	</head>
 	<body>
