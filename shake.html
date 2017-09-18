@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--qq浏览器下是否可以全屏-->
+		<!--<meta name="x5-fullscreen" content="true" />-->
+		<!--UC浏览器下是否可以全屏-->
+		<!--<meta name="full-screen" content="yes">-->
+		<meta charset="utf-8">
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1, user-scalable=no,width=device-width,height=device-height" />
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mobile_reset.css"/>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>		
+		<script src="js/shake.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/utils.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			window.onload = function() { 
+				RootNodeFont();
+			  var myShakeEvent = new Shake({ 
+			    threshold: 15 
+			  }); 
+			  
+			  myShakeEvent.start(); 
+			  
+			  window.addEventListener('shake', shakeEventDidOccur, false); 
+			  
+			  function shakeEventDidOccur () { 
+			    var result = document.getElementById("result"); 
+			    result.className = "result"; 
+			    var arr = ['妹子一枚','福利图片一套','码农笔记一本','土豪金一台']; 
+			    var num = Math.floor(Math.random()*4); 
+			    result.innerHTML = "恭喜，摇得"+arr[num]+"！"; 
+			    setTimeout(function(){ 
+			      result.className = "result result-show"; 
+			    }, 1000); 
+			  } 
+			}; 
+		</script>
+	</head>
+	<body>
+		<div id="hand" class="hand hand-animate"></div> 
+		<div id="result">摇一摇</div> 
+	</body>
+</html>
