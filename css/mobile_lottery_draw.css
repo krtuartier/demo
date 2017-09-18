@@ -21,3 +21,7 @@
   display: inline-block;
   width: 2em;
 }
+.prize {
+  text-align: center;
+  font-size: 0.3rem;
+}

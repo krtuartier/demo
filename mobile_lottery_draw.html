@@ -33,6 +33,7 @@
 						obj.css('height',obj.width());
 						var canvas=opts.canvas?opts.canvas.get(0):obj.find('canvas').get(0);
 						var oBtn=opts.startBtn;
+						var oShowPrize=opts.showPrize;
 						var viewW=obj.width();
 						var viewH=obj.height();
 						canvas.width=viewW;
@@ -73,7 +74,7 @@
 											pointer();
 											dialPI();
 											clearInterval(runHandler);
-											console.log(opts.info[noticeIndex].money+' '+opts.info[noticeIndex].currency);
+											oShowPrize.html(opts.info[noticeIndex].money+' '+opts.info[noticeIndex].currency);
 											trigger=false;
 											saveAngles+=angles;
 											angles=0;
@@ -196,7 +197,8 @@
 				$('body').AutoSize();
 				$('.turnplate_box').LotteryDraw({
 					canvas:$('#myCanvas'),
-					startBtn:$('#tupBtn')
+					startBtn:$('#tupBtn'),
+					showPrize:$('.prize')
 				});
 			});
 			
@@ -209,5 +211,6 @@
 				<span>开始抽奖</span>
 			</button>
 		</div>
+		<p class="prize"></p>
 	</body>
 </html>
