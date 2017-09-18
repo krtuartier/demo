@@ -58,17 +58,21 @@
 								if (noticeIndex>opts.info.length-1) {
 									noticeIndex-=opts.info.length;
 								}
+								var stopSpeed=4;
 								runHandler=setInterval(function(){
 									ctx.clearRect(0,0,viewW,viewH);
 									trigger=true;
-									if (angles<-2*180) {
-										angles-=4;
+									if (angles<-12*180) {
+										angles-=stopSpeed;
+										if (!stopSpeed==1) {
+											stopSpeed-=1;
+										}
 										createCircle();
 										centerPI();
 										pointer();
 										dialPI();
-										if (angles<(-2*180-2*180/opts.info.length*(random))) {
-											angles=(-2*180-2*180/opts.info.length*(random));
+										if (angles<(-14*180-2*180/opts.info.length*(random))) {
+											angles=(-14*180-2*180/opts.info.length*(random));
 											createCircle();
 											centerPI();
 											pointer();
