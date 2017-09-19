@@ -44,8 +44,8 @@
 						var saveAngles=0;
 						var trigger=false;
 						var random=null;
-		//				var clickNum = 3;//可抽奖次数
-		//				var rotNum = 0;//旋转次数
+						var clickNum = opts.clickNum;//可抽奖次数
+						var rotNum = 0;//旋转次数
 						var noticeIndex = null;//中奖公告
 						createCircle();
 						centerPI();
@@ -59,6 +59,11 @@
 									noticeIndex-=opts.info.length;
 								}
 								var stopSpeed=4;
+								if (rotNum>=clickNum) {
+									alert('抽奖次数用完了');
+									return;
+								}
+								rotNum+=1;
 								runHandler=setInterval(function(){
 									ctx.clearRect(0,0,viewW,viewH);
 									trigger=true;
@@ -84,13 +89,13 @@
 											angles=0;
 										}
 									}else{
-										angles-=12;
+										angles-=6;
 										createCircle();
 										centerPI();
 										pointer();
 										dialPI();
 									}
-								},1000/60);
+								},1000/120);
 							}
 						});
 						function pointer(){
@@ -157,6 +162,7 @@
 					pointerColor:"#FF4350",
 					centerPIColor:"rgba(0,0,0,.5)",
 					dialFontColor:"#DCC722",
+					clickNum:3,
 					info:[
 						{
 							money:"谢谢参与",
@@ -205,7 +211,6 @@
 					showPrize:$('.prize')
 				});
 			});
-			
 		</script>
 	</head>
 	<body>
