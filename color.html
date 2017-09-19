@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.round{
+				width: 100px;
+				height: 100px;
+				border-radius: 50px;
+			}
+			.chooseColor{
+				width: 200px;
+				height: 200px;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload=function(){
+				var oRound=document.querySelector('.round');
+				var oChooseColor=document.querySelector('.chooseColor');
+				var oShow=document.querySelector('.show');
+				var randomColor=setInterval(function(){	
+					var array=[0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'];
+//					oRound.style.background='radial-gradient('+
+//					'#'+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					','+
+//					'#'+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					array[parseInt(Math.random()*16)]+
+//					')';
+					oRound.style.backgroundColor='#'+
+					array[parseInt(Math.random()*16)]+
+					array[parseInt(Math.random()*16)]+
+					array[parseInt(Math.random()*16)]+
+					array[parseInt(Math.random()*16)]+
+					array[parseInt(Math.random()*16)]+
+					array[parseInt(Math.random()*16)];
+				},200);
+				document.onclick=function(){
+					oChooseColor.style.background=oRound.style.backgroundColor;
+					oShow.innerHTML=oRound.style.backgroundColor;
+				}
+				
+			}
+		</script>
+	</head>
+	<body>
+		<p class="round"></p>
+		<p>点击页面任意位置获取颜色：</p>
+		<p class="show"></p>
+		<p class="chooseColor"></p>
+	</body>
+</html>
