@@ -7,6 +7,7 @@
 			var sectionWrap = opts.sectionWrap ? opts.sectionWrap : $tags.next(); //默认下一个元素为翻页的wrap
 			var section = sectionWrap.children(); //一个section页面
 			var vPer = 100 / controlObj.length; //选项个数百分比
+			var scrollPlace=opts.scrollPlace;
 
 			//nav样式
 			function navCss() {
@@ -151,12 +152,44 @@
 				sectionWrap.attr('page', iNow);
 			}
 			pageIndex(iNow);
+			
+			if (scrollPlace) {
+				var sPSET=[];
+				scrollPlace.each(function(){
+					sPSET[$(this).parent().index()]={
+						iH:$(window).height(),
+						iStartx:0,
+						iScroll:0,
+						iStartScroll:0
+					};
+					console.log(sPSET);
+					//触摸移动页面控制
+					$(this).bind('touchstart', function(e) {
+						var touch = e.originalEvent.targetTouches[0];
+						sPSET[$(this).parent().index()].iStarty = touch.pageY;
+						sPSET[$(this).parent().index()].iStartScroll = sPSET[$(this).parent().index()].iScroll;
+					});
+					$(this).bind('touchmove', function(e) {
+						e.preventDefault(); //微信touch事件兼容
+						var touch = e.originalEvent.targetTouches[0];
+						var diy = touch.pageY - sPSET[$(this).parent().index()].iStarty;
+						sPSET[$(this).parent().index()].iScroll = sPSET[$(this).parent().index()].iStartScroll + diy;
+					 	$(this).scrollTop(-sPSET[$(this).parent().index()].iScroll);
+					});
+					$(this).bind('touchend', function(e) {
+						var touch = e.originalEvent.changedTouches[0];
+						var diy = touch.pageY - sPSET[$(this).parent().index()].iStarty;
+						sPSET[$(this).parent().index()].iScroll = sPSET[$(this).parent().index()].iStartScroll + diy;
+					});
+				});
+			}
 		});
 	};
 	$.fn.Tags.defaults = {
 		navPosition:true,
 		sectionWrap: null,
 		sectionWrapHeight: true,
+		scrollPlace:null,
 		barColor: '#004FB6',
 		speed: 200
 	};
