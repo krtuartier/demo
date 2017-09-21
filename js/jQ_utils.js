@@ -106,12 +106,12 @@
 				}
 				iScroll = iStartScroll + dix;
 				iNow = -iScroll / iW;
-				sectionWrap.css({
-					'left': 0 - iNow * 100 + '%'
-				});
-				oNavB.css({
-					'left': iNow * vPer + '%'
-				});
+//				sectionWrap.css({
+//					'left': 0 - iNow * 100 + '%'
+//				});
+//				oNavB.css({
+//					'left': iNow * vPer + '%'
+//				});
 			});
 			sectionWrap.bind('touchend', function(e) {
 				var touch = e.originalEvent.changedTouches[0];
@@ -123,9 +123,9 @@
 				}
 				iScroll = iStartScroll + dix;
 				iNow = -iScroll / iW;
-				if(dix <= 0 && dix / iW <= -.3) {
+				if(dix <= 0 && dix / iW <= -.4) {
 					iNow = Math.ceil(iNow);
-				} else if(dix >= 0 && dix / iW >= .3) {
+				} else if(dix >= 0 && dix / iW >= .4) {
 					iNow = Math.floor(iNow);
 				} else {
 					iNow = Math.ceil(iNow);
@@ -145,7 +145,6 @@
 				controlObj.removeClass('active');
 				controlObj.eq(iNow).addClass('active');
 				pageIndex(iNow);
-
 			});
 
 			function pageIndex(iNow) {
