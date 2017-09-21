@@ -90,98 +90,97 @@
 				});
 			});
 			//触摸移动页面控制
-			sectionWrap.bind('touchstart', function(e) {
-				var touch = e.originalEvent.targetTouches[0];
-				iStartx = touch.pageX;
-				iStartScroll = iScroll;
-			});
-			sectionWrap.bind('touchmove', function(e) {
-				e.preventDefault(); //微信touch事件兼容
-				var touch = e.originalEvent.targetTouches[0];
-				var dix = touch.pageX - iStartx;
-				if((sectionWrap.attr('page') == 0 && dix > 0) || (sectionWrap.attr('page') == section.length - 1 && dix < 0)) {
-					return;
-				} else {
-					e.stopPropagation();
-				}
-				iScroll = iStartScroll + dix;
-				iNow = -iScroll / iW;
-//				sectionWrap.css({
+//			sectionWrap.bind('touchstart', function(e) {
+//				var touch = e.originalEvent.targetTouches[0];
+//				iStartx = touch.pageX;
+//				iStartScroll = iScroll;
+//			});
+//			sectionWrap.bind('touchmove', function(e) {
+//				e.preventDefault(); //微信touch事件兼容
+//				var touch = e.originalEvent.targetTouches[0];
+//				var dix = touch.pageX - iStartx;
+//				if((sectionWrap.attr('page') == 0 && dix > 0) || (sectionWrap.attr('page') == section.length - 1 && dix < 0)) {
+//					return;
+//				} else {
+//					e.stopPropagation();
+//				}
+//				iScroll = iStartScroll + dix;
+//				iNow = -iScroll / iW;
+////				sectionWrap.css({
+////					'left': 0 - iNow * 100 + '%'
+////				});
+////				oNavB.css({
+////					'left': iNow * vPer + '%'
+////				});
+//			});
+//			sectionWrap.bind('touchend', function(e) {
+//				var touch = e.originalEvent.changedTouches[0];
+//				var dix = touch.pageX - iStartx;
+//				if((sectionWrap.attr('page') == 0 && dix > 0) || (sectionWrap.attr('page') == section.length - 1 && dix < 0)) {
+//					return;
+//				} else {
+//					e.stopPropagation();
+//				}
+//				iScroll = iStartScroll + dix;
+//				iNow = -iScroll / iW;
+//				if(dix <= 0 && dix / iW <= -.4) {
+//					iNow = Math.ceil(iNow);
+//				} else if(dix >= 0 && dix / iW >= .4) {
+//					iNow = Math.floor(iNow);
+//				} else {
+//					iNow = Math.ceil(iNow);
+//				}
+//				if(iNow < 0) {
+//					iNow = 0
+//				} else if(iNow > section.length - 1) {
+//					iNow = section.length - 1;
+//				}
+//				iScroll = -iNow * iW;
+//				sectionWrap.animate({
 //					'left': 0 - iNow * 100 + '%'
-//				});
-//				oNavB.css({
+//				}, opts.speed);
+//				oNavB.animate({
 //					'left': iNow * vPer + '%'
+//				}, opts.speed);
+//				controlObj.removeClass('active');
+//				controlObj.eq(iNow).addClass('active');
+//				pageIndex(iNow);
+//			});
+//
+//			
+//			if (scrollPlace) {
+//				var sPSET=[];
+//				scrollPlace.each(function(){
+//					sPSET[$(this).parent().index()]={
+//						iH:$(window).height(),
+//						iStartx:0,
+//						iScroll:0,
+//						iStartScroll:0
+//					};
+//					//触摸移动页面控制
+//					$(this).bind('touchstart', function(e) {
+//						var touch = e.originalEvent.targetTouches[0];
+//						sPSET[$(this).parent().index()].iStarty = touch.pageY;
+//						sPSET[$(this).parent().index()].iStartScroll = sPSET[$(this).parent().index()].iScroll;
+//					});
+//					$(this).bind('touchmove', function(e) {
+//						e.preventDefault(); //微信touch事件兼容
+//						var touch = e.originalEvent.targetTouches[0];
+//						var diy = touch.pageY - sPSET[$(this).parent().index()].iStarty;
+//						sPSET[$(this).parent().index()].iScroll = sPSET[$(this).parent().index()].iStartScroll + diy;
+//					 	$(this).scrollTop(-sPSET[$(this).parent().index()].iScroll);
+//					});
+//					$(this).bind('touchend', function(e) {
+//						var touch = e.originalEvent.changedTouches[0];
+//						var diy = touch.pageY - sPSET[$(this).parent().index()].iStarty;
+//						sPSET[$(this).parent().index()].iScroll = sPSET[$(this).parent().index()].iStartScroll + diy;
+//					});
 //				});
-			});
-			sectionWrap.bind('touchend', function(e) {
-				var touch = e.originalEvent.changedTouches[0];
-				var dix = touch.pageX - iStartx;
-				if((sectionWrap.attr('page') == 0 && dix > 0) || (sectionWrap.attr('page') == section.length - 1 && dix < 0)) {
-					return;
-				} else {
-					e.stopPropagation();
-				}
-				iScroll = iStartScroll + dix;
-				iNow = -iScroll / iW;
-				if(dix <= 0 && dix / iW <= -.4) {
-					iNow = Math.ceil(iNow);
-				} else if(dix >= 0 && dix / iW >= .4) {
-					iNow = Math.floor(iNow);
-				} else {
-					iNow = Math.ceil(iNow);
-				}
-				if(iNow < 0) {
-					iNow = 0
-				} else if(iNow > section.length - 1) {
-					iNow = section.length - 1;
-				}
-				iScroll = -iNow * iW;
-				sectionWrap.animate({
-					'left': 0 - iNow * 100 + '%'
-				}, opts.speed);
-				oNavB.animate({
-					'left': iNow * vPer + '%'
-				}, opts.speed);
-				controlObj.removeClass('active');
-				controlObj.eq(iNow).addClass('active');
-				pageIndex(iNow);
-			});
-
+//			}
 			function pageIndex(iNow) {
 				sectionWrap.attr('page', iNow);
 			}
 			pageIndex(iNow);
-			
-			if (scrollPlace) {
-				var sPSET=[];
-				scrollPlace.each(function(){
-					sPSET[$(this).parent().index()]={
-						iH:$(window).height(),
-						iStartx:0,
-						iScroll:0,
-						iStartScroll:0
-					};
-					console.log(sPSET);
-					//触摸移动页面控制
-					$(this).bind('touchstart', function(e) {
-						var touch = e.originalEvent.targetTouches[0];
-						sPSET[$(this).parent().index()].iStarty = touch.pageY;
-						sPSET[$(this).parent().index()].iStartScroll = sPSET[$(this).parent().index()].iScroll;
-					});
-					$(this).bind('touchmove', function(e) {
-						e.preventDefault(); //微信touch事件兼容
-						var touch = e.originalEvent.targetTouches[0];
-						var diy = touch.pageY - sPSET[$(this).parent().index()].iStarty;
-						sPSET[$(this).parent().index()].iScroll = sPSET[$(this).parent().index()].iStartScroll + diy;
-					 	$(this).scrollTop(-sPSET[$(this).parent().index()].iScroll);
-					});
-					$(this).bind('touchend', function(e) {
-						var touch = e.originalEvent.changedTouches[0];
-						var diy = touch.pageY - sPSET[$(this).parent().index()].iStarty;
-						sPSET[$(this).parent().index()].iScroll = sPSET[$(this).parent().index()].iStartScroll + diy;
-					});
-				});
-			}
 		});
 	};
 	$.fn.Tags.defaults = {
