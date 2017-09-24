@@ -43,7 +43,7 @@
 						var angles=0;
 						var saveAngles=0;
 						var trigger=false;
-						var random=null;
+						var randomAry=[];
 						var clickNum = opts.clickNum;//可抽奖次数
 						var rotNum = 0;//旋转次数
 						var noticeIndex = null;//中奖公告
@@ -51,7 +51,47 @@
 						centerPI();
 						pointer();
 						dialPI();
+						setPer();
+						function setPer(){
+							var minper=100;
+							for(var i in opts.info){
+								if ((opts.info[i].per+'').indexOf('.')>-1) {
+									var newPerLen=(opts.info[i].per+'').split('.')[1].length;
+									newPerLen=Math.pow(10,2+newPerLen);
+									if (newPerLen>minper) {
+										minper=newPerLen;
+										console.log(minper);
+									}
+								}
+							}
+							for (var i in opts.info) {
+								if ((i-1)>=0&&opts.info[i].per!=0) {
+									if (randomAry[i-1]==0&&i-2>=0) {
+										randomAry.push(randomAry[i-2]+opts.info[i].per*(minper/100));
+									}else{
+										randomAry.push(randomAry[i-1]+opts.info[i].per*(minper/100));
+									}
+								}else if (opts.info[i].per==0) {
+									randomAry.push(0);
+								}else{
+									randomAry.push(opts.info[i].per*(minper/100));
+								}
+							}
+							var tex=0;
+							console.log(randomAry);
+							for (var i in randomAry) {
+								if (i!=1) {
+									tex=tex+randomAry[i];
+								}
+								
+							}
+							console.log(tex);
+						}
 						oBtn.click(function(){
+							
+//							randomAry=Math.ceil(Math.random()*minper);
+								
+								return
 							if (!trigger) {
 								random=Math.floor(Math.random()*8);
 								noticeIndex = noticeIndex+random;
@@ -119,7 +159,7 @@
 							ctx.textBaseline = 'middle';
 							ctx.textAlign="center";
 							ctx.fillStyle = opts.dialFontColor;
-							var step = 2 * Math.PI / 8;
+							var step = 2 * Math.PI / opts.info.length;
 							for(var i = 0,len=opts.info.length; i < len; i++) {
 								ctx.save();
 								ctx.beginPath();
@@ -137,7 +177,7 @@
 							var startAngle = 0; //扇形的开始弧度
 							var endAngle = 0; //扇形的终止弧度
 							for(var i = 0,len=opts.info.length; i < len; i++) {
-								startAngle = Math.PI * (i / 4 - 1 / 8)+angles/180*Math.PI+saveAngles/180*Math.PI;
+								startAngle = Math.PI * (i / 4 - 1 / opts.info.length)+angles/180*Math.PI+saveAngles/180*Math.PI;
 								endAngle = startAngle + Math.PI * (1 / 4);
 								ctx.save();
 								ctx.beginPath();
@@ -166,35 +206,43 @@
 					info:[
 						{
 							money:"谢谢参与",
-							currency:'再接再厉'
+							currency:'再接再厉',
+							per:50
 						},
 						{
 							money:"1000",
-							currency:'元'
+							currency:'元',
+							per:0
 						},
 						{
 							money:"10",
-							currency:'元'
+							currency:'元',
+							per:10
 						},
 						{
 							money:"500",
-							currency:'淘金币'
+							currency:'淘金币',
+							per:10
 						},
 						{
 							money:"100",
-							currency:'元'
+							currency:'元',
+							per:9.99999
 						},
 						{
 							money:"4999",
-							currency:'淘金币'
+							currency:'淘金币',
+							per:0.00001
 						},
 						{
 							money:"1",
-							currency:'元'
+							currency:'元',
+							per:10
 						},
 						{
 							money:"20",
-							currency:'淘金币'
+							currency:'淘金币',
+							per:10
 						}
 					]
 				};
