@@ -28,53 +28,61 @@
 			(function($) {
 				$.fn.LotteryDraw = function(options) {
 					var opts = $.extend({}, $.fn.LotteryDraw.defaults, options);
-					return this.each(function() {
-						var obj = $(this);
-						obj.css('height',obj.width());
-						var canvas=opts.canvas?opts.canvas.get(0):obj.find('canvas').get(0);
-						var oBtn=opts.startBtn;
-						var oShowPrize=opts.showPrize;
-						var viewW=obj.width();
-						var viewH=obj.height();
-						canvas.width=viewW;
-						canvas.height=viewH;
-						var ctx=canvas.getContext('2d');
-						var runHandler=null;
-						var angles=0;
-						var saveAngles=0;
-						var trigger=false;
-						var randomAry=[];
+					return this.each(function(){
+						var obj = $(this);//canvas外围
+						obj.css('height',obj.width());//让canvas外围成正方形
+						var canvas=opts.canvas?opts.canvas.get(0):obj.find('canvas').get(0);//获取canvas
+						var oBtn=opts.startBtn;//获取抽奖按钮
+						var oShowPrize=opts.showPrize;//获取奖品展示的区域
+						var oEndMsg=opts.endMsg;//获取抽奖机会提示的区域
+						var viewW=obj.width();//获取外围宽度
+						var viewH=obj.height();//获取外围高度
+						canvas.width=viewW;//将外围宽度赋值给canvas
+						canvas.height=viewH;//将外围高度赋值给canvas
+						var ctx=canvas.getContext('2d');//canvas
+						var runHandler=null;//旋转定时器的handler
+						var angles=0;//偏转角度
+						var saveAngles=0;//保存偏见角度
+						var trigger=false;//开关变量
+						var minper=100;//默认倍率100%
+						var randomAry=[];//随机区间的数组
+						var randomNum=null;//当前随机数值
 						var clickNum = opts.clickNum;//可抽奖次数
 						var rotNum = 0;//旋转次数
-						var noticeIndex = null;//中奖公告
+						var randomIndex=0;//随机数值所在的下标
+						var noticeIndex =0;//当前数值所在的下标
+						//有边界的颜色间隔
 						createCircle();
+						//中心圆盘遮罩
 						centerPI();
+						//指针
 						pointer();
+						//奖品信息
 						dialPI();
+						//设定概率
 						setPer();
+						//概率函数
 						function setPer(){
-							var minper=100;
-							for(var i in opts.info){
-								if ((opts.info[i].per+'').indexOf('.')>-1) {
-									var newPerLen=(opts.info[i].per+'').split('.')[1].length;
+							for(var i in opts.init){
+								if ((opts.init[i].per+'').indexOf('.')>-1) {
+									var newPerLen=(opts.init[i].per+'').split('.')[1].length;
 									newPerLen=Math.pow(10,2+newPerLen);
 									if (newPerLen>minper) {
 										minper=newPerLen;
-										console.log(minper);
 									}
 								}
 							}
-							for (var i in opts.info) {
-								if ((i-1)>=0&&opts.info[i].per!=0) {
+							for (var i in opts.init) {
+								if ((i-1)>=0&&opts.init[i].per!=0) {
 									if (randomAry[i-1]==0&&i-2>=0) {
-										randomAry.push(randomAry[i-2]+opts.info[i].per*(minper/100));
+										randomAry.push(randomAry[i-2]+opts.init[i].per*(minper/100));
 									}else{
-										randomAry.push(randomAry[i-1]+opts.info[i].per*(minper/100));
+										randomAry.push(randomAry[i-1]+opts.init[i].per*(minper/100));
 									}
-								}else if (opts.info[i].per==0) {
+								}else if (opts.init[i].per==0) {
 									randomAry.push(0);
 								}else{
-									randomAry.push(opts.info[i].per*(minper/100));
+									randomAry.push(opts.init[i].per*(minper/100));
 								}
 							}
 							var tex=0;
@@ -85,22 +93,29 @@
 								}
 								
 							}
-							console.log(tex);
 						}
+						//抽奖按钮
 						oBtn.click(function(){
-							
-//							randomAry=Math.ceil(Math.random()*minper);
-								
-								return
 							if (!trigger) {
-								random=Math.floor(Math.random()*8);
-								noticeIndex = noticeIndex+random;
-								if (noticeIndex>opts.info.length-1) {
-									noticeIndex-=opts.info.length;
+								randomNum=Math.ceil(Math.random()*minper);
+								for(var i in randomAry){
+									if(0<randomNum&&randomNum<randomAry[0]){
+										randomIndex=0
+									}else if(randomAry[i-1]<randomNum&&randomNum<=randomAry[i]){
+										if(randomAry[i-1]==0&&(i-1)!=0&&randomAry[i-2]<randomNum&&randomNum<=randomAry[i]){
+											randomIndex=i;
+										}else{
+											randomIndex=i;
+										}
+									}
+								}
+								noticeIndex = parseInt(noticeIndex)+parseInt(randomIndex);
+								if (noticeIndex>opts.init.length-1) {
+									noticeIndex-=opts.init.length;
 								}
 								var stopSpeed=4;
 								if (rotNum>=clickNum) {
-									alert('抽奖次数用完了');
+									oEndMsg.html('抽奖次数用完了');
 									return;
 								}
 								rotNum+=1;
@@ -116,14 +131,14 @@
 										centerPI();
 										pointer();
 										dialPI();
-										if (angles<(-14*180-2*180/opts.info.length*(random))) {
-											angles=(-14*180-2*180/opts.info.length*(random));
+										if (angles<(-14*180-2*180/opts.init.length*(randomIndex))) {
+											angles=(-14*180-2*180/opts.init.length*(randomIndex));
 											createCircle();
 											centerPI();
 											pointer();
 											dialPI();
 											clearInterval(runHandler);
-											oShowPrize.html(opts.info[noticeIndex].money+' '+opts.info[noticeIndex].currency);
+											oShowPrize.html(opts.init[noticeIndex].money+' '+opts.init[noticeIndex].currency);
 											trigger=false;
 											saveAngles+=angles;
 											angles=0;
@@ -138,8 +153,9 @@
 								},1000/120);
 							}
 						});
+						//指针函数
 						function pointer(){
-							ctx.beginPath();//箭头指针
+							ctx.beginPath();
 							ctx.moveTo(viewW*.5,viewH*.5-75);
 							ctx.lineTo(viewW*.5-20,viewH*.5);
 							ctx.lineTo(viewW*.5+20,viewH*.5);
@@ -148,40 +164,43 @@
 							ctx.fill();
 							ctx.closePath();
 						}
+						//中心圆函数
 						function centerPI(){
-							ctx.beginPath();//中间圆圈
+							ctx.beginPath();
 							ctx.arc(viewW*.5, viewH*.5, 75, 0, Math.PI * 2, false);
 							ctx.fillStyle = opts.centerPIColor;
 							ctx.fill();
 							ctx.closePath();
 						}
+						//奖品信息函数
 						function dialPI(){
 							ctx.textBaseline = 'middle';
 							ctx.textAlign="center";
 							ctx.fillStyle = opts.dialFontColor;
-							var step = 2 * Math.PI / opts.info.length;
-							for(var i = 0,len=opts.info.length; i < len; i++) {
+							var step = 2 * Math.PI / opts.init.length;
+							for(var i = 0,len=opts.init.length; i < len; i++) {
 								ctx.save();
 								ctx.beginPath();
 								ctx.translate(viewW*.5,viewH*.5);
 								ctx.rotate(i*step+angles/180*Math.PI+saveAngles/180*Math.PI);
 								ctx.font = " 20px Microsoft YaHei";
-								ctx.fillText(opts.info[i].money,0,-120,60);
+								ctx.fillText(opts.init[i].money,0,-120,60);
 								ctx.font = " 14px Microsoft YaHei";
-								ctx.fillText(opts.info[i].currency,0,-100,60);
+								ctx.fillText(opts.init[i].currency,0,-100,60);
 								ctx.closePath();
 								ctx.restore();
 							}
 						}
+						//颜色间隔函数
 						function createCircle() {
 							var startAngle = 0; //扇形的开始弧度
 							var endAngle = 0; //扇形的终止弧度
-							for(var i = 0,len=opts.info.length; i < len; i++) {
-								startAngle = Math.PI * (i / 4 - 1 / opts.info.length)+angles/180*Math.PI+saveAngles/180*Math.PI;
-								endAngle = startAngle + Math.PI * (1 / 4);
+							for(var i = 0,len=opts.init.length; i < len; i++) {
+								startAngle = Math.PI * (i / parseFloat(opts.init.length*.5) - 1 / opts.init.length)+angles/180*Math.PI+saveAngles/180*Math.PI;
+								endAngle = startAngle + Math.PI * (1 / parseFloat(opts.init.length*.5));
 								ctx.save();
 								ctx.beginPath();
-								ctx.arc(viewW*.5, viewH*.5, 90, startAngle, endAngle, false);
+								ctx.arc(viewW*.5,viewH*.5,90,startAngle,endAngle,false);
 								ctx.lineWidth = 120;
 								if(i % 2 == 0) {
 									ctx.strokeStyle = opts.evenColor;
@@ -195,15 +214,17 @@
 					});
 				};
 				$.fn.LotteryDraw.defaults = {
-					canvas:null,
-					startBtn:null,
-					evenColor:"#626262",
-					oddColor:"#787878",
-					pointerColor:"#FF4350",
-					centerPIColor:"rgba(0,0,0,.5)",
-					dialFontColor:"#DCC722",
-					clickNum:3,
-					info:[
+					canvas:null,//canvas
+					startBtn:null,//抽奖按钮
+					showPrize:null,//展示奖品
+					endMsg:null,//抽奖机会已用完提示
+					evenColor:"#626262",//双数颜色
+					oddColor:"#787878",//单数颜色
+					pointerColor:"#FF4350",//指针颜色
+					centerPIColor:"rgba(0,0,0,.5)",//中心圆颜色
+					dialFontColor:"#DCC722",//抽奖信息颜色
+					clickNum:3,//可抽奖3次
+					init:[//抽奖信息
 						{
 							money:"谢谢参与",
 							currency:'再接再厉',
@@ -256,7 +277,8 @@
 				$('.turnplate_box').LotteryDraw({
 					canvas:$('#myCanvas'),
 					startBtn:$('#tupBtn'),
-					showPrize:$('.prize')
+					showPrize:$('.prize'),
+					endMsg:$('.end_alert')
 				});
 			});
 		</script>
@@ -269,5 +291,6 @@
 			</button>
 		</div>
 		<p class="prize"></p>
+		<p class="end_alert"></p>
 	</body>
 </html>
