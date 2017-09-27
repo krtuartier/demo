@@ -1,22 +1,37 @@
 @r: 100rem;
-.turnplate_box {
+body{
+    background-color: #e40808;
+    color: #fff;
+}
+.turnplate_box{
     width: 100%;
     position: relative;
+    .close{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        line-height: 1em;
+        text-align: center;
+    }
 }
-.turnplatw_btn {
-    width: 150/@r;
-    height: 150/@r;
+.turnplatw_btn{
+    width: 230/@r;
+    height: 230/@r;
     left: 50%;
     top: 50%;
-    margin-left: -150*.5/@r;
-    margin-top: -150*.5/@r;
-    border-radius: 150*.5/@r;
+    margin-left: -230*.5/@r;
+    margin-top: -230*.5/@r;
+    border-radius: 230*.5/@r;
+    border: 20/@r solid goldenrod;
+    box-sizing: border-box;
     position: absolute;
     cursor: pointer;
-    border: none;
     background-color: #FF4350;
     outline: none;
     color: #fff;
+    font-size: 40/@r;
     span{
         display: inline-block;
         width: 2em;
@@ -24,10 +39,41 @@
 }
 .prize{
     text-align: center;
-    font-size: 30/@r;
+    font-size: 0;
+    color: transparent;
+    opacity: 0;
+    transition: all .5s ease-in-out;
 }
 .end_alert{
     padding-top: 1em;
     text-align: center;
-    font-size: 30/@r;
+    font-size: 0;
+    color: transparent;
+    opacity: 0;
+    transition: all .5s ease-in-out;
+}
+.showMsg{
+    opacity: 1;
+    font-size: 40/@r;
+    color: #fff;
+}
+.prize_list{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 300/@r;
+    padding: 0 1em;
+    box-sizing: border-box;
+    overflow: auto;
+    font-size: 40/@r;
+    p{
+        height: 1.5em;
+        line-height: 1.5em;
+    }
+    ul{
+        li{
+            
+        }
+    }
 }
