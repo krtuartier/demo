@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+		<meta content="telephone=no" name="format-detection" />
+		<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0, maximum-scale=1,height=device-height" />
+
+		<title>经纬度定位测试</title>
+		<link rel="stylesheet" href="css/ydui.css?rev=@@hash" />
+		<script src="js/jQuery v2.1.4.js"></script>
+		<script src="js/ydui.flexible.js"></script>
+		<script src="js/ydui.js"></script>
+		<script src="" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function() {
+				var $oLoading = $('<div class="mask-black"></div>' +
+					'<div class="mask-white-dialog" id="YDUI_LOADING">' +
+					'<div class="m-loading">' +
+					'<div class="loading-icon"></div>' +
+					'<div class="loading-txt">加载中</div>' +
+					'</div>' +
+					'</div>');
+				$('body').append($oLoading);
+				getLocation();
+//------------------------------------------------------------------------------------------------------------------------
+					function getLocation(){
+					  if (navigator.geolocation){ 
+					    navigator.geolocation.getCurrentPosition(showPosition,showError); 
+					  }else{ 
+						$('.mask-black').remove();
+						$('.mask-white-dialog').remove();
+						$('.oUl').html('浏览器不支持地理定位');
+					  } 
+					}
+					function showPosition(position){ 
+						$('.mask-black').remove();
+						$('.mask-white-dialog').remove();
+						var aLis='';
+						position.coords.latitude?aLis+='<li>纬度:' + position.coords.latitude + '</li>':'';
+						position.coords.longitude?aLis+='<li>经度:' + position.coords.longitude + '</li>':'';
+						aLis+='<li>定位信息:</li>';
+						var y=[];
+						function getJsonMsg(json){
+							if (typeof(json)=='object') {
+								for (var key in json) {
+									getJsonMsg(json[key]);
+								}
+							}else{
+								y.push(json) ;
+							}
+						}
+						getJsonMsg(position);
+						for(var i in y){
+							aLis+='<li>'+y[i]+'</li>';
+						}
+						$('.oUl').html(aLis);
+					}
+					function showError(error){ 
+						$('.mask-black').remove();
+						$('.mask-white-dialog').remove();
+						switch(error.code) {
+							case error.PERMISSION_DENIED:
+								alert("定位失败,用户拒绝请求地理定位");
+								break;
+							case error.POSITION_UNAVAILABLE:
+								alert("定位失败,位置信息是不可用");
+								break;
+							case error.TIMEOUT:
+								alert("定位失败,请求获取用户位置超时");
+								break;
+							case error.UNKNOWN_ERROR:
+								alert("定位失败,定位系统失效");
+								break;
+						}
+						$('.oUl').html('请检查浏览器定位权限为允许、手机网络和定位开启<br />Chrome、IOS10浏览器暂不支持');
+					}
+			});
+		</script>
+	</head>
+
+	<body>
+		<ul class="oUl">
+		</ul>
+	</body>
+
+</html>
