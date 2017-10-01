@@ -27,25 +27,25 @@
 					'</div>' +
 					'</div>');
 				$('body').append($oLoading);
-//				var geolocation = new BMap.Geolocation();
-//				geolocation.getCurrentPosition(function(r) {
-//					if(this.getStatus() == 0) {
-//						var aLis='';
-//						for (var i in r) {
-//							if (i=='address'&&r[i].city&&r[i].province) {
-//								aLis+='<li>' + r[i].province + '</li>';
-//								aLis+='<li>' + r[i].city + '</li>';
-//							}else if(i=='latitude'){
-//								aLis+='<li>纬度:' + r.latitude + '</li>';
-//							}else if (i=='longitude') {
-//								aLis+='<li>经度:' + r.longitude + '</li>';
-//							}
-//						}
-//						console.log(r);
-//						$('.oUl').html(aLis);
-//						$('.mask-black').remove();
-//						$('.mask-white-dialog').remove();
-//					} else {
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r) {
+					if(this.getStatus() == 0) {
+						var aLis='';
+						for (var i in r) {
+							if (i=='address'&&r[i].city&&r[i].province) {
+								aLis+='<li>' + r[i].province + '</li>';
+								aLis+='<li>' + r[i].city + '</li>';
+							}else if(i=='latitude'){
+								aLis+='<li>纬度:' + r.latitude + '</li>';
+							}else if (i=='longitude') {
+								aLis+='<li>经度:' + r.longitude + '</li>';
+							}
+						}
+						console.log(r);
+						$('.oUl').html(aLis);
+						$('.mask-black').remove();
+						$('.mask-white-dialog').remove();
+					} else {
 						mapObj = new AMap.Map('iCenter');
 						mapObj.plugin('AMap.Geolocation', function() {
 							geolocation = new AMap.Geolocation({
@@ -89,10 +89,10 @@
 								$('.mask-white-dialog').remove();
 							}
 						});
-//					}
-//				}, {
-//					enableHighAccuracy: true
-//				});
+					}
+				}, {
+					enableHighAccuracy: true
+				});
 			});
 		</script>
 	</head>
