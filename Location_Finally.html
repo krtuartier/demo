@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+		<meta content="telephone=no" name="format-detection" />
+		<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0, maximum-scale=1,height=device-height" />
+
+		<title>经纬度定位测试</title>
+		<link rel="stylesheet" href="css/ydui.css?rev=@@hash" />
+		<script src="js/jQuery v2.1.4.js"></script>
+		<script src="js/ydui.flexible.js"></script>
+		<script src="js/ydui.js"></script>
+		<script src="" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=L44jZwK2GFx9ulXpaDT6njlrWKCGpfXF"></script>
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.0&key=a5c20321d024344056424ea6abf8f4e1"></script>
+		<script type="text/javascript">
+			$(function() {
+				var $oLoading = $('<div class="mask-black"></div>' +
+					'<div class="mask-white-dialog" id="YDUI_LOADING">' +
+					'<div class="m-loading">' +
+					'<div class="loading-icon"></div>' +
+					'<div class="loading-txt">加载中</div>' +
+					'</div>' +
+					'</div>');
+				$('body').append($oLoading);
+//				var geolocation = new BMap.Geolocation();
+//				geolocation.getCurrentPosition(function(r) {
+//					if(this.getStatus() == 0) {
+//						var aLis='';
+//						for (var i in r) {
+//							if (i=='address'&&r[i].city&&r[i].province) {
+//								aLis+='<li>' + r[i].province + '</li>';
+//								aLis+='<li>' + r[i].city + '</li>';
+//							}else if(i=='latitude'){
+//								aLis+='<li>纬度:' + r.latitude + '</li>';
+//							}else if (i=='longitude') {
+//								aLis+='<li>经度:' + r.longitude + '</li>';
+//							}
+//						}
+//						console.log(r);
+//						$('.oUl').html(aLis);
+//						$('.mask-black').remove();
+//						$('.mask-white-dialog').remove();
+//					} else {
+						mapObj = new AMap.Map('iCenter');
+						mapObj.plugin('AMap.Geolocation', function() {
+							geolocation = new AMap.Geolocation({
+								enableHighAccuracy: true, //是否使用高精度定位，默认:true
+								timeout: 10000, //超过10秒后停止定位，默认：无穷大
+								GeoLocationFirst: true, //默认为false，设置为true的时候可以调整PC端为优先使用浏览器定位，失败后使用IP定位
+								maximumAge: 0, //定位结果缓存0毫秒，默认：0
+								convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+								showButton: false, //显示定位按钮，默认：true
+								showMarker: false, //定位成功后在定位到的位置显示点标记，默认：true
+								showCircle: false, //定位成功后用圆圈表示定位精度范围，默认：true
+								panToLocation: false, //定位成功后将定位到的位置作为地图中心点，默认：true
+								zoomToAccuracy: false //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+							});
+							mapObj.addControl(geolocation);
+							geolocation.getCurrentPosition();
+							AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
+							AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
+							function onComplete(res){
+								var aLis='';
+								res.position.lat?aLis+='<li>纬度:' + res.position.lat + '</li>':'';
+								res.position.lng?aLis+='<li>经度:' + res.position.lng + '</li>':'';
+								res.position.Q?aLis+='<li>精确纬度:' + res.position.Q + '</li>':'';
+								res.position.N?aLis+='<li>精确经度:' + res.position.N + '</li>':'';
+								res.formattedAddress?aLis+='<li>' + res.formattedAddress + '</li>':'';
+								res.addressComponent.province?aLis+='<li>' + res.addressComponent.province + '</li>':'';
+								res.addressComponent.city?aLis+='<li>' + res.addressComponent.city + '</li>':'';
+								res.addressComponent.district?aLis+='<li>' + res.addressComponent.district + '</li>':'';
+								res.addressComponent.township?aLis+='<li>' + res.addressComponent.township + '</li>':'';
+								res.addressComponent.street?aLis+='<li>' + res.addressComponent.street + '</li>':'';
+								res.addressComponent.streetNumber?aLis+='<li>' + res.addressComponent.streetNumber + '</li>':'';
+								console.log(res);
+								$('.mask-black').remove();
+								$('.mask-white-dialog').remove();
+							}
+							function onError(err) {
+								console.log(err);
+								$('.res').html('请检查浏览器定位权限为允许、手机网络和定位开启<br />Chrome、IOS10浏览器暂不支持');
+								$('.mask-black').remove();
+								$('.mask-white-dialog').remove();
+							}
+						});
+//					}
+//				}, {
+//					enableHighAccuracy: true
+//				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<ul class="oUl">
+		</ul>
+		<p class="res"></p>
+		<p class="location_all"></p>
+		<p class="province"></p>
+		<p class="city"></p>
+		<p class="district"></p>
+		<p class="township"></p>
+		<p class="street"></p>
+		<p class="streetNumber"></p>
+	</body>
+
+</html>

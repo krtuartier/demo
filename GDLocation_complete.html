@@ -48,13 +48,16 @@
 				    function onComplete(res){
 				    	console.log(res);
 				    	$('.res').html('纬度：'+res.position.lat+'<br />'+' 经度：'+res.position.lng+'<br />'+'精确纬度：'+res.position.Q+'<br />'+'精确经度：'+res.position.N);
-				    	$('.location_all').html(res.formattedAddress);
-				    	$('.province').html(res.addressComponent.province);
-				    	$('.city').html(res.addressComponent.city);
-				    	$('.district').html(res.addressComponent.district);
-				    	$('.township').html(res.addressComponent.township);
-				    	$('.street').html(res.addressComponent.street);
-				    	$('.streetNumber').html(res.addressComponent.streetNumber);
+				    	if (res.addressComponent) {
+				    		$('.location_all').html(res.formattedAddress);
+					    	$('.province').html(res.addressComponent.province);
+					    	$('.city').html(res.addressComponent.city);
+					    	$('.district').html(res.addressComponent.district);
+					    	$('.township').html(res.addressComponent.township);
+					    	$('.street').html(res.addressComponent.street);
+					    	$('.streetNumber').html(res.addressComponent.streetNumber);
+				    	}
+				    	
 				    	$('.mask-black').remove();
 				    	$('.mask-white-dialog').remove();
 				    }
