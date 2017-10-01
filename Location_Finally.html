@@ -28,10 +28,12 @@
 					'</div>');
 				$('body').append($oLoading);
 				var BrowserVer=navigator.appVersion+'';
-				if (BrowserVer.indexOf('Browser')>-1) {
-					myGetLocation();
-				}else{
+				var UserAgent=navigator.userAgent+'';
+				var isiOS = !!UserAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+				if (BrowserVer.indexOf('Browser')<0||isiOS==true) {
 					getLocation();
+				}else if (BrowserVer.indexOf('Browser')>-1) {
+					myGetLocation();
 				}
 				//my getLocation
 //------------------------------------------------------------------------------------------------------------------------
