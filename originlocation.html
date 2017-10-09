@@ -44,18 +44,23 @@
 						position.coords.longitude?aLis+='<li>经度:' + position.coords.longitude + '</li>':'';
 						aLis+='<li>定位信息:</li>';
 						var y=[];
-						function getJsonMsg(json){
+						function getJsonMsg(json,key){
 							if (typeof(json)=='object') {
 								for (var key in json) {
-									getJsonMsg(json[key]);
+									getJsonMsg(json[key],key);
 								}
 							}else{
-								y.push(json) ;
+								if (key) {
+									var keyJ=key+':'+json;
+									y.push(keyJ);
+								} else{
+									y.push(json);
+								}
 							}
 						}
 						getJsonMsg(position);
 						for(var i in y){
-							aLis+='<li>'+i+':'+y[i]+'</li>';
+							aLis+='<li>'+y[i]+'</li>';
 						}
 						$('.oUl').html(aLis);
 					}
