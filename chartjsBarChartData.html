@@ -31,34 +31,29 @@
 		oCanvas.height=oBody.clientWidth/600*450;
 		context=oCanvas.getContext("2d");
 		var radialGradient1 = context.createLinearGradient(0, 0, 0, oBody.clientWidth/600*450);
-		radialGradient1.addColorStop(0, 'rgba(100,149,237,.5)');
+		radialGradient1.addColorStop(0, 'rgb(100,149,237)');
 		radialGradient1.addColorStop(1, 'rgb(255,255,255)');
 
-		var lineChartData = {
+		var barChartData = {
 			labels : ["January","February","March","April","May","June","July"],
 			datasets : [
 				{
-					fillColor : radialGradient1,
-					strokeColor : "rgba(100,149,237,1)",
-					pointColor : "rgba(255,255,255,1)",
-					pointStrokeColor : "rgba(100,149,237,1)",
-					data : [65,59,75,81,56,55,90]
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,1)",
+					data : [65,59,90,81,56,55,40]
+				},
+				{
+					fillColor : "rgba(151,187,205,0.5)",
+					strokeColor : "rgba(151,187,205,1)",
+					data : [28,48,40,19,96,27,100]
 				}
-//				,
-//				{
-//					fillColor : "rgba(151,187,205,0.5)",
-//					strokeColor : "rgba(151,187,205,1)",
-//					pointColor : "rgba(151,187,205,1)",
-//					pointStrokeColor : "#fff",
-//					data : [28,48,40,19,96,27,100]
-//				}
 			]
 			
 		}
+
+		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(barChartData);
 	
-		
-		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Line(lineChartData);
-		
+	
 	
 	</script>
 </html>

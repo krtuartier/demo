@@ -736,6 +736,7 @@ window.Chart = function(context){
 		}		
 	}
 
+	//环形
 	var Doughnut = function(data,config,ctx){
 		var segmentTotal = 0;
 		
@@ -779,7 +780,7 @@ window.Chart = function(context){
 					ctx.stroke();
 				}
 				cumulativeAngle += segmentAngle;
-			}			
+			}	
 		}			
 		
 		
@@ -812,6 +813,7 @@ window.Chart = function(context){
 		calculateXAxisSize();
 		animationLoop(config,drawScale,drawLines,ctx);		
 		
+		//折线
 		function drawLines(animPc){
 			for (var i=0; i<data.datasets.length; i++){
 				ctx.strokeStyle = data.datasets[i].strokeColor;
@@ -1228,6 +1230,12 @@ window.Chart = function(context){
 	}
 	
 	function animationLoop(config,drawScale,drawData,ctx){
+		var animationConfigList={
+			config:config,
+			drawScale:drawScale,
+			drawData:drawData,
+			ctx:ctx
+		};
 		var animFrameAmount = (config.animation)? 1/CapValue(config.animationSteps,Number.MAX_VALUE,1) : 1,
 			easingFunction = animationOptions[config.animationEasing],
 			percentAnimComplete =(config.animation)? 0 : 1;
@@ -1258,7 +1266,7 @@ window.Chart = function(context){
 					requestAnimFrame(animLoop);
 				}
 				else{
-					if (typeof config.onAnimationComplete == "function") config.onAnimationComplete();
+					if (typeof config.onAnimationComplete == "function") config.onAnimationComplete(animationConfigList);
 				}
 			
 		}		
