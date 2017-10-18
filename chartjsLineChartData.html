@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1, user-scalable=no,width=device-width,height=device-height" />
+		
+		<title></title>
+		
+		<link rel="stylesheet" type="text/css" href="css/ydui.css"/>
+		<style type="text/css">
+			/*body{
+				background-color: cornflowerblue;
+			}*/
+		</style>
+		<script src="js/chartjs.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+	</body>
+	<script type="text/javascript">
+		var oCanvas=document.getElementById("canvas");
+		
+		var oBody=document.querySelector("body");
+		console.log(oBody.clientWidth);
+		console.log(oBody.clientHeight);
+		oCanvas.width=oBody.clientWidth;
+		oCanvas.height=oBody.clientWidth/600*450;
+		context=oCanvas.getContext("2d");
+		var radialGradient1 = context.createLinearGradient(0, 0, 0, oBody.clientWidth/600*450);
+		radialGradient1.addColorStop(0, 'rgb(100,149,237)');
+		radialGradient1.addColorStop(1, 'rgb(255,255,255)');
+
+		var lineChartData = {
+			labels : ["January","February","March","April","May","June","July"],
+			datasets : [
+				{
+					fillColor : radialGradient1,
+					strokeColor : "rgba(220,220,220,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					data : [65,59,90,81,56,55,40]
+				}
+//				,
+//				{
+//					fillColor : "rgba(151,187,205,0.5)",
+//					strokeColor : "rgba(151,187,205,1)",
+//					pointColor : "rgba(151,187,205,1)",
+//					pointStrokeColor : "#fff",
+//					data : [28,48,40,19,96,27,100]
+//				}
+			]
+			
+		}
+	
+		
+		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Line(lineChartData);
+		
+	
+	</script>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/ydui.css?rev=@@hash" />
+		<style type="text/css">
+			.inputfilestyle{  
+			    width:96%;  
+			    height:2.4rem;  
+			    cursor: pointer;  
+			    outline: medium none;  
+			    position: absolute;  
+			    filter:alpha(opacity=0);  
+			    -moz-opacity:0;  
+			    opacity:0;  
+			    z-index:9999;  
+			}
+		</style>
+		<script src="js/jQuery v2.1.4.js"></script>
+		<script src="js/ydui.flexible.js"></script>
+		<script src="js/ydui.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				var filechooser = document.getElementById("imgchoose");
+				var imagebase64Array = new Array();
+				var chooseflag = false;
+				var filelength = 0;
+				var checklength = 0;
+			
+				function buttonclick() {
+					filelength = 0;
+					checklength = 0;
+				}
+				//删除照片  
+				function deleteImg(num) {
+					var temp = new Array();
+					for(var i = 0; i < imagebase64Array.length; i++) {
+						if(i != num) {
+							temp.push(imagebase64Array[i]);
+						}
+					}
+					imagebase64Array = temp;
+					showImg();
+				}
+				//显示照片  
+				function showImg() {
+					if(imagebase64Array.length) {
+						$("#imgresultdiv").html("");
+						for(var i = 0; i < imagebase64Array.length; i++) {
+							var tempstr = imagebase64Array[i];
+							var html = '<div style="border: 1px solid #cccccc;"><table style="width: 100%;"><tr><td align="center" style="background-image: url(\'\')">' +
+								'<img src="' + tempstr + '" width="98%" id="htzpimg' + i + '" name="htzpimg"/></td></tr></table>';
+							html = html + '<div class="menu-btn" style="margin: 15px;"><a href="#" onclick="deleteImg(' + i + ')">删除该照片</a></div></div>';
+							$("#imgresultdiv").append(html);
+						}
+						$("#carddiv").show();
+					} else {
+						$("#imgresultdiv").html("");
+						$("#carddiv").hide();
+					}
+				}
+				filechooser.onchange = function() {
+					$.showIndicator();
+					if(!this.files.length) {
+						$.hideIndicator();
+						return;
+					}
+					var files = Array.prototype.slice.call(this.files);
+					/*   if (files.length > 8) { 
+					     $.hideIndicator(); 
+					     $.alert("最多同时只可上传8张图片"); 
+					     return null; 
+					 }  */
+					filelength = files.length;
+					files.forEach(function(file, i) {
+						if(!/\/(?:jpeg|png|gif|jpg)/i.test(file.type)) return; //可以上传的图片格式为 .jpeg、.png、.gif、.jpg  
+						var reader = new FileReader();
+						//获取图片大小  
+						var size = file.size / 1024 > 1024 ? (~~(10 * file.size / 1024 / 1024)) / 10 + "MB" : ~~(file.size / 1024) + "KB";
+						reader.onload = function() {
+							var result = this.result;
+							var img = new Image();
+							img.src = result;
+							//如果图片大小小于100kb，则直接上传  
+							if(result.length <= maxsize) {
+								img = null;
+								$.hideIndicator();
+								imagebase64Array.push(result);
+								chooseflag = true;
+								checklength = checklength + 1;
+								if(checklength == filelength) {
+									showImg();
+									$("#imgchoose").val("");
+									$.alert("选择图片成功！");
+								}
+								return;
+							}
+							//图片加载完毕之后进行压缩，然后上传  
+							if(img.complete) {
+								callback();
+							} else {
+								img.onload = callback;
+							}
+			
+							function callback() {
+								var data = compress(img);
+								$.hideIndicator();
+								imagebase64Array.push(data);
+								chooseflag = true;
+								checklength = htchecklength + 1;
+								if(checklength == filelength) {
+									showImg();
+									$("#imgchoose").val("");
+									$.alert("选择图片成功！");
+								}
+								img = null;
+							}
+						};
+						reader.readAsDataURL(file);
+					})
+				};
+			});
+		</script>
+	</head>
+	<body>
+		<div class="card">  
+		    <div class="card-header">照片</div>  
+		        <div class="card-content" style="display: none;" id="imgdiv">  
+		            <div class="card-content-inner">  
+		            <div id="resultdiv"></div>  
+		        </div>  
+		    </div>  
+		    <div class="card-footer">  
+		        <div class="content-block">  
+		            <div class="row">  
+		                <div class="col-100">  
+		                    <input type="file" id="imgchoose" accept="image/*" multiple  class="inputfilestyle">  
+		                    <a href="#" class="button button-big button-fill button-blue" onclick="" id="shangchuanimg">上传照片</a>  
+		                </div>  
+		            </div>  
+		        </div>  
+		    </div>  
+		</div>
+	</body>
+</html>

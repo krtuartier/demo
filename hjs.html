@@ -41,9 +41,11 @@
 			
 			        return str;
 			    }
-			    var code = hider('alert("测试一下。。")');
-console.log(code);
-				Function("‌‍​‌‌‍﻿​‌‍‌‌‌﻿​‍‌﻿‌​​‍‍​​‍​‍‌‌﻿​‌﻿‌‌​﻿‌‍‌​‌​​﻿‌​‌​​‍‌‌﻿​‌﻿‌‌​﻿‍​‌​​‍‌​‌​​﻿‌‌‌‌﻿​‌﻿‌‌​﻿‌​‌​‌‌​﻿​​​﻿​​‌‌﻿​‌﻿‌‌​﻿‌​‌​‌‌​﻿​​‌​​‍‌‌﻿​‌﻿‌‌​﻿​﻿​﻿​​​﻿​​​﻿​‍‌‌﻿​‌﻿‌‌​﻿​﻿​﻿​​​﻿​​​﻿​‍​‍​‍​‍‍‌".replace(/.{4}/g,function(a){var rep={"​":"00","‌":"01","‍":"10","﻿":"11"};return String.fromCharCode(parseInt(a.replace(/./g, function(a) {return rep[a]}),2))}))();
+			    var code = hider(`
+			    	
+			    `);
+				console.log(code);
+				//Function("‌‍​‌‌‍﻿​‌‍‌‌‌﻿​‍‌﻿‌​​‍‍​​‍​‍‌‌﻿​‌﻿‌‌​﻿‌‍‌​‌​​﻿‌​‌​​‍‌‌﻿​‌﻿‌‌​﻿‍​‌​​‍‌​‌​​﻿‌‌‌‌﻿​‌﻿‌‌​﻿‌​‌​‌‌​﻿​​​﻿​​‌‌﻿​‌﻿‌‌​﻿‌​‌​‌‌​﻿​​‌​​‍‌‌﻿​‌﻿‌‌​﻿​﻿​﻿​​​﻿​​​﻿​‍‌‌﻿​‌﻿‌‌​﻿​﻿​﻿​​​﻿​​​﻿​‍​‍​‍​‍‍‌".replace(/.{4}/g,function(a){var rep={"​":"00","‌":"01","‍":"10","﻿":"11"};return String.fromCharCode(parseInt(a.replace(/./g, function(a) {return rep[a]}),2))}))();
 			})(window);
 		</script>
 	</head>

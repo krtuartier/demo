@@ -14,7 +14,6 @@
 		<script src="js/jQuery v2.1.4.js"></script>
 		<script src="js/ydui.flexible.js"></script>
 		<script src="js/ydui.js"></script>
-		<script src="" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			$(function() {
 				var $oLoading = $('<div class="mask-black"></div>' +
@@ -59,6 +58,7 @@
 							}
 						}
 						getJsonMsg(position);
+						console.log(position);
 						for(var i in y){
 							aLis+='<li>'+y[i]+'</li>';
 						}
