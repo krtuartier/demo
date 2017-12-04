@@ -1059,6 +1059,7 @@ window.Chart = function(context){
 					ctx.lineTo(barOffset, xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2));
 					ctx.lineTo(barOffset + barWidth, xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2));
 					ctx.lineTo(barOffset + barWidth, xAxisPosY);
+					
 					if(config.barShowStroke){
 						ctx.stroke();
 					}
@@ -1197,7 +1198,7 @@ window.Chart = function(context){
 			
 			//Then get the area above we can safely draw on.
 			
-		}		
+		}
 		function getValueBounds() {
 			var upperValue = Number.MIN_VALUE;
 			var lowerValue = Number.MAX_VALUE;
@@ -1207,7 +1208,7 @@ window.Chart = function(context){
 					if ( data.datasets[i].data[j] < lowerValue) { lowerValue = data.datasets[i].data[j] };
 				}
 			};
-	
+			
 			var maxSteps = Math.floor((scaleHeight / (labelHeight*0.66)));
 			var minSteps = Math.floor((scaleHeight / labelHeight*0.5));
 			
