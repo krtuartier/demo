@@ -1,0 +1,65 @@
+
+.chance {
+    position: relative;
+    width: 566/@r;
+    height: 566/@r;
+    text-align: center; 
+    color: #000;
+    font-size: 36/@r;
+    background-color: #fff;
+    border: 36/@r solid  rgb(216, 0, 16);
+    border-radius: 283/@r;
+    i{
+        width: 268/@r;
+        height: 268/@r;
+        display: block;
+        background-image: url(../img/huijiejie.png);
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center;
+        position: absolute;
+        top: -188/@r;
+        left: 50%;
+        margin-left: -134/@r;
+    }
+    p{
+        padding-top: 208/@r;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        .merry{
+            position: absolute;
+            top: 10%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            display: block;
+            color:rgb(225,180,100);
+            font-size: 60/@r;
+        }
+        .Santa{
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            margin-left: -150/@r;
+            width: 300/@r;
+            height: 100/@r;
+            display: block;
+            background-image: url(../img/radar_christmas.gif);
+            background-size: 100% auto;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    }
+    p:before{
+        display: block;
+        content: "";
+        width: 96%;
+        height: 96%;
+        border-radius: 50%;
+        position: absolute;
+        top: 2%;
+        left: 2%;
+        border: 3/@r dashed rgb(216, 0, 16);
+    }
+}
