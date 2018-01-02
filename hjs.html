@@ -44,11 +44,11 @@
 			    
 			    //这里放需要加密的代码
 			    var code = hider(`
-			    	alert(111111111);
+			    	
 			    `);
-			   	
 			   	//控制台输出
-				console.log(code);
+			   	document.write(code);
+			   	
 				//Function("‌‍​‌‌‍﻿​‌‍‌‌‌﻿​‍‌﻿‌​​‍‍​​‍​‍‌‌﻿​‌﻿‌‌​﻿‌‍‌​‌​​﻿‌​‌​​‍‌‌﻿​‌﻿‌‌​﻿‍​‌​​‍‌​‌​​﻿‌‌‌‌﻿​‌﻿‌‌​﻿‌​‌​‌‌​﻿​​​﻿​​‌‌﻿​‌﻿‌‌​﻿‌​‌​‌‌​﻿​​‌​​‍‌‌﻿​‌﻿‌‌​﻿​﻿​﻿​​​﻿​​​﻿​‍‌‌﻿​‌﻿‌‌​﻿​﻿​﻿​​​﻿​​​﻿​‍​‍​‍​‍‍‌".replace(/.{4}/g,function(a){var rep={"​":"00","‌":"01","‍":"10","﻿":"11"};return String.fromCharCode(parseInt(a.replace(/./g, function(a) {return rep[a]}),2))}))();
 			})(window);
 		</script>
